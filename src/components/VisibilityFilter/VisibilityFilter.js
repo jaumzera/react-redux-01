@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import FilterLink from './FilterLink';
+import FilterLink from '../FilterLink/FilterLink';
 
 const INI_STATE = {
   currentFilter: 'ALL',

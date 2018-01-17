@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Todos from './components/Todos';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore, combineReducers } from 'redux';
-import { todoReducer } from './components/Todos';
-import { visibilityReducer } from './components/VisibilityFilter';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import Todos, { todoReducer } from './components/Todos/Todos';
+import { visibilityReducer } from './components/VisibilityFilter/VisibilityFilter';
 import { Provider } from 'react-redux';
 
 const store = createStore(
@@ -13,6 +12,7 @@ const store = createStore(
     todoReducer,
     visibilityReducer,
   }),
+  applyMiddleware(thunk),
 );
 
 store.subscribe(() => {

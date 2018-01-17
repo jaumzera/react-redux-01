@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import VisibilityFilter from './VisibilityFilter';
-let currentId = 0;
+import VisibilityFilter from '../VisibilityFilter/VisibilityFilter';
+import { addTodo, toggleTodo, removeTodo } from './TodosActions';
 
 const INI_STATE = {
   todos: [],
@@ -63,7 +63,6 @@ class Todos extends Component {
 
   render() {
     console.log('current props: ', this.props);
-    const { todos } = this.props;
     const todoList = this.getVisibleTodos().map((todo, key) => (
       <li
         style={todo.completed ? { textDecoration: 'line-through' } : {}}
@@ -91,27 +90,10 @@ const mapStateToProps = store => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addTodo: text => {
-      dispatch({
-        type: 'ADD_TODO',
-        todo: { id: currentId++, text, completed: false },
-      });
-    },
-    toggleTodo: todo => {
-      dispatch({
-        type: 'TOGGLE_TODO',
-        todo,
-      });
-    },
-    removeTodo: todo => {
-      dispatch({
-        type: 'REMOVE_TODO',
-        todo,
-      });
-    },
-  };
+const mapDispatchToProps = {
+  addTodo,
+  toggleTodo,
+  removeTodo,
 };
 
 export { todoReducer };
