@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FilterLink from '../FilterLink/FilterLink';
+import { all, completed, _new } from './VisibilityFilterActions';
 
 const INI_STATE = {
   currentFilter: 'ALL',
@@ -9,6 +10,7 @@ const INI_STATE = {
 const visibilityReducer = (state = INI_STATE, action) => {
   switch (action.type) {
     case 'ALL':
+      console.log('reducer all');
       return { ...state, currentFilter: 'ALL' };
     case 'COMPLETED':
       return { ...state, currentFilter: 'COMPLETED' };
@@ -56,22 +58,14 @@ class VisibilityFilter extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { ...state.visibilityReducer };
+const mapStateToProps = store => {
+  return { ...store.visibilityReducer };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    all: () => {
-      dispatch({ type: 'ALL' });
-    },
-    completed: () => {
-      dispatch({ type: 'COMPLETED' });
-    },
-    _new: () => {
-      dispatch({ type: 'NEW' });
-    },
-  };
+const mapDispatchToProps = {
+  all,
+  completed,
+  _new,
 };
 
 export { visibilityReducer };
