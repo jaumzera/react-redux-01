@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import FilterLink from './FilterLink';
 
 const INI_STATE = {
   currentFilter: 'ALL',
@@ -34,31 +35,29 @@ class VisibilityFilter extends Component {
   render() {
     return (
       <div>
-        {this.props.currentFilter !== 'ALL' && (
-          <a href="#ALL" onClick={this.all}>
-            All
-          </a>
-        )}{' '}
-        {this.props.currentFilter !== 'NEW' && (
-          <a href="#NEW" onClick={this._new}>
-            New
-          </a>
-        )}{' '}
-        {this.props.currentFilter !== 'COMPLETED' && (
-          <a href="#COMPLETED" onClick={this.completed}>
-            Completed
-          </a>
-        )}
+        <span>Show: </span>
+        <FilterLink
+          label="All"
+          action={this.all}
+          selected={this.props.currentFilter === 'ALL'}
+        />{' '}
+        <FilterLink
+          label="New"
+          action={this._new}
+          selected={this.props.currentFilter === 'NEW'}
+        />{' '}
+        <FilterLink
+          label="Completed"
+          action={this.completed}
+          selected={this.props.currentFilter === 'COMPLETED'}
+        />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log('visibility filter state: ', state);
-  return {
-    currentFilter: state.filter.currentFilter,
-  };
+  return { ...state.visibilityReducer };
 };
 
 const mapDispatchToProps = dispatch => {

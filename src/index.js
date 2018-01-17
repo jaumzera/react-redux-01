@@ -1,20 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Todos from './components/Todos';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers } from 'redux';
-import { todoReducer } from './App';
+import { todoReducer } from './components/Todos';
 import { visibilityReducer } from './components/VisibilityFilter';
 import { Provider } from 'react-redux';
 
-const combinedReducers = combineReducers({
-  todos: todoReducer,
-  filter: visibilityReducer,
-});
-
-console.log('combined-reducers: ', combinedReducers);
-const store = createStore(combinedReducers);
+const store = createStore(
+  combineReducers({
+    todoReducer,
+    visibilityReducer,
+  }),
+);
 
 store.subscribe(() => {
   console.log('store: ', store.getState());
@@ -25,7 +24,7 @@ console.log('store.getState: ', store.getState());
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Todos />
   </Provider>,
   document.getElementById('root'),
 );

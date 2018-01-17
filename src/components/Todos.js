@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import VisibilityFilter from './components/VisibilityFilter';
+import VisibilityFilter from './VisibilityFilter';
 let currentId = 0;
 
 const INI_STATE = {
@@ -21,12 +21,17 @@ const todoReducer = (state = INI_STATE, action) => {
           return todo;
         }),
       };
+    case 'REMOVE_TODO':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.todo.id),
+      };
     default:
       return state;
   }
 };
 
-class App extends Component {
+class Todos extends Component {
   addTodo = text => {
     this.props.addTodo(this.input.value);
     this.input.value = '';
@@ -38,16 +43,34 @@ class App extends Component {
     this.props.toggleTodo(todo);
   };
 
+  removeTodo = todo => () => {
+    console.log('Remove todo: ', todo);
+    this.props.removeTodo(todo);
+  };
+
+  getVisibleTodos() {
+    switch (this.props.currentFilter) {
+      case 'ALL':
+        return this.props.todos;
+      case 'NEW':
+        return this.props.todos.filter(todo => !todo.completed);
+      case 'COMPLETED':
+        return this.props.todos.filter(todo => todo.completed);
+      default:
+        return this.props.todos;
+    }
+  }
+
   render() {
-    console.log('current state: ', this.state);
+    console.log('current props: ', this.props);
     const { todos } = this.props;
-    const todoList = todos.map((todo, key) => (
+    const todoList = this.getVisibleTodos().map((todo, key) => (
       <li
         style={todo.completed ? { textDecoration: 'line-through' } : {}}
         key={key}
-        onClick={this.toggleTodo(todo)}
       >
-        {todo.text}
+        <span onClick={this.toggleTodo(todo)}> {todo.text} </span>
+        <button onClick={this.removeTodo(todo)}>x</button>
       </li>
     ));
     return (
@@ -61,10 +84,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log('todo: ', state);
+const mapStateToProps = store => {
   return {
-    todos: state.todos.todos,
+    ...store.todoReducer,
+    currentFilter: store.visibilityReducer.currentFilter,
   };
 };
 
@@ -82,8 +105,14 @@ const mapDispatchToProps = dispatch => {
         todo,
       });
     },
+    removeTodo: todo => {
+      dispatch({
+        type: 'REMOVE_TODO',
+        todo,
+      });
+    },
   };
 };
 
 export { todoReducer };
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Todos);
